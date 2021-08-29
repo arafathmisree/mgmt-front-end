@@ -1,6 +1,7 @@
 export class Student {
-    public userName = '';
-    public age = '';
+    public id = '';
+    public name = '';
+    public age: Number | String | undefined;
     public dob = '';
     public email = '';
 }

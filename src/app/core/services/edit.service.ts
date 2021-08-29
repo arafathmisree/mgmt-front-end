@@ -27,15 +27,16 @@ export class EditService extends BehaviorSubject<any[]> {
             return super.next(this.data);
         }
 
-        this.fetch()
-            .pipe(
-                tap(data => {
-                    this.data = data;
-                })
-            )
-            .subscribe(data => {
-                super.next(data);
-            });
+
+        // this.fetch()
+        //     .pipe(
+        //         tap(data => {
+        //             this.data = data;
+        //         })
+        //     )
+        //     .subscribe(data => {
+        //         super.next(data);
+        //     });
     }
 
     public save(data: any, isNew?: boolean) {
@@ -82,61 +83,15 @@ export class EditService extends BehaviorSubject<any[]> {
         return data ? `&models=${JSON.stringify([data])}` : '';
     }
 
-    // getUsers(): Observable<any> {
-    //     // ...using get request
-    //     return this.http.get(this.usersURL)
-    //         // ...and calling .json() on the response to return data
-    //         .pipe(
-    //             tap(data =>
-    //                 console.log('All: ' + JSON.stringify(data)))
-    //         );
-    // }
 
-    // public read() {
+    uploadFiles(formData: any) {
+        this.http
+            .post<any>(`http://localhost:6000/api/upload`, formData).subscribe(response => {
+                console.log(response);
 
-    //     this.apollo
-    //         .watchQuery({
-    //             query: gql`
-    // query getAllStudents {
-    //         id,
-    //         name,
-    //         dob,
-    //         email,
-    //         age,
-    //       }
-    //       # {
-    //       #   rates(currency: "USD") {
-    //       #     currency
-    //       #     rate
-    //       #   }
-    //       # }
-    //     `,
-    //         })
-    //         .valueChanges.subscribe((result: any) => {
-    //             // this.rates = result?.data?.rates;
-    //             // this.loading = result.loading;
-    //             // this.error = result.error;
-    //             console.log(result);
-
-    //         });
-    //     //   client
-    //     //     .query({
-    //     //       query: gql`
-    //     // query getAllStudents {
-    //     //   id,
-    //     //   name,
-    //     //   dob,
-    //     //   email,
-    //     //   age,
-    //     // }
-    //     //     `,
-    //     //     })
-    //     //     .then((result) => console.log(result));
-    // }
-
-    // }
-
-
-
+            }, error => {
+                console.log(error);
+            });
+    }
 
 }

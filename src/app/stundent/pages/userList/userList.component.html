@@ -54,22 +54,39 @@ kendoGridSaveCommand type="button"
     </kendo-grid>
 </form> -->
 
-
+<!-- <form novalidate #fileForm="ngForm">
 <kendo-upload [saveUrl]="uploadSaveUrl" [removeUrl]="uploadRemoveUrl" [autoUpload]="false"
     [restrictions]="myRestrictions">
 </kendo-upload>
+</form> -->
+<!-- <form novalidate #fileForm="ngForm">
+    <input type="file" name="files" id="files" />
+    <button kendoButton (click)="uploadSelected()">Upload</button>
+</form> -->
+<!-- <style>
+    .k-clear-selected,
+    .k-upload-selected {
+        display: none !important;
+    }
+</style> -->
+<form novalidate #fileForm="ngForm">
+    <input type="file" name="files" (change)="fileChange($event)" id="files" />
+    <button kendoButton (click)="uploadSelected()">Upload</button>
+</form>
+<!-- <input (change)="fileChange($event)" type="file" class="custom-file-input" id="inputGroupFile01"> -->
+
 
 <form novalidate #myForm="ngForm">
-    <kendo-grid [data]="users" [height]="533" [pageable]="true" [sortable]="true"
+    <kendo-grid [data]="students" [height]="533" [pageable]="true" [sortable]="true"
         (dataStateChange)="onStateChange($event)" (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
         (save)="saveHandler($event)" (remove)="removeHandler($event)" (add)="addHandler($event, myForm)"
         [navigable]="true">
-        <ng-template kendoGridToolbarTemplate>
+        <!-- <ng-template kendoGridToolbarTemplate>
             <button kendoGridAddCommand type="button">Add new</button>
-        </ng-template>
-        <kendo-grid-column field="userName" title="User Name">
+        </ng-template> -->
+        <kendo-grid-column field="name" title="User Name">
             <ng-template kendoGridEditTemplate let-dataItem="dataItem">
-                <input [(ngModel)]="dataItem.userName" kendoGridFocusable name="userName" class="k-textbox" required />
+                <input [(ngModel)]="dataItem.name" kendoGridFocusable name="name" class="k-textbox" required />
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="dob" title="Date of Birth">
@@ -82,7 +99,8 @@ kendoGridSaveCommand type="button"
         </kendo-grid-column>
         <kendo-grid-column field="age" title="Age">
             <ng-template kendoGridEditTemplate let-dataItem="dataItem">
-                <input [(ngModel)]="dataItem.age" kendoGridFocusable name="age" class="k-textbox" required />
+                <input type="number" [(ngModel)]="dataItem.age" kendoGridFocusable name="age" class="k-textbox"
+                    required />
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="email" title="Email">

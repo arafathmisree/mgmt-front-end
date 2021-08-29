@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 import { EditService } from '../../../core/services/edit.service';
 import { FileRestrictions } from "@progress/kendo-angular-upload";
 import { DataService } from '../../../core/services/data.service';
+import { HttpClient } from '@angular/common/http';
+
 
 
 
@@ -24,12 +26,13 @@ import { DataService } from '../../../core/services/data.service';
 export class userListComponent implements OnInit {
 
 
+    private query: any
+
     public myForm: FormGroup | undefined;
-    public fileUploadForm: FormGroup | undefined;
     fileInputLabel: string | undefined;
 
 
-    public srtdents: any
+    public students: Student[] = [];
 
     public value: Date = new Date(2000, 2, 10);
     public view!: Observable<GridDataResult>;
@@ -51,49 +54,38 @@ export class userListComponent implements OnInit {
     myRestrictions: FileRestrictions = {
         allowedExtensions: [".xls", ".xlsx"],
     };
+    uploadedFiles: any;
 
-    public users = [
-        {
-            userName: "Udara",
-            dob: "1991-05-01",
-            age: "31",
-            email: "ula.6364@gmail.com"
-        },
-        {
-            userName: "Udara",
-            dob: "1991-05-01",
-            age: "31",
-            email: "ula.6364@gmail.com"
-        },
-        {
-            userName: "Udara",
-            dob: "1991-05-01",
-            age: "31",
-            email: "ula.6364@gmail.com"
-        },
-        {
-            userName: "Udara",
-            dob: "1991-05-01",
-            age: "31",
-            email: "ula.6364@gmail.com"
-        }
-    ]
+    // public fileForm = new FormGroup({
+    //     file: new FormControl(''),
+    // });
 
-
-    constructor(@Inject(EditService) editServiceFactory: any, private dataService: DataService) {
+    constructor(@Inject(EditService) editServiceFactory: any, private dataService: DataService, public http: HttpClient) {
         this.editService = editServiceFactory();
     }
 
-    public ngOnInit(): void {
+    public ngOnInit() {
+
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.editService.read();
         console.log(this.view);
-        this.dataService.getAllStudents();
+        this.query = this.dataService.getAllStudents().valueChanges.subscribe((result: any) => {
+            result.data.getAllStudents.map((_student: any) => {
+                let __std: Student = {
+                    id: _student.id,
+                    name: _student.name,
+                    dob: _student.dob,
+                    age: _student.age,
+                    email: _student.email
+                }
+                this.students.push(__std)
+            })
 
+        });
 
+        console.log(this.students);
 
     }
-
     public onStateChange(state: State) {
         this.gridState = state;
 
@@ -105,12 +97,11 @@ export class userListComponent implements OnInit {
         formInstance.reset();
         this.closeEditor(sender);
         this.myForm = new FormGroup({
-            userName: new FormControl(),
+            name: new FormControl(),
             dob: new FormControl(),
             age: new FormControl(),
             email: new FormControl(),
         });
-
         sender.addRow(this.myForm);
 
         // sender.addRow(new Product());
@@ -143,7 +134,9 @@ export class userListComponent implements OnInit {
     }
 
     public saveHandler({ sender, rowIndex, dataItem, isNew }: any) {
-        this.editService.save(dataItem, isNew);
+        // this.editService.save(dataItem, isNew);
+        let data = { ...dataItem, age: Number(dataItem.age) }
+        this.dataService.updateStudent(data)
 
         sender.closeRow(rowIndex);
 
@@ -151,8 +144,11 @@ export class userListComponent implements OnInit {
         this.editedProduct = undefined;
     }
 
-    public removeHandler({ dataItem }: any) {
+    public async removeHandler({ dataItem }: any) {
         this.editService.remove(dataItem);
+        let _result
+        _result = await this.dataService.deleteStudent(dataItem)
+
     }
 
     private closeEditor(grid: any, rowIndex = this.editedRowIndex) {
@@ -161,4 +157,22 @@ export class userListComponent implements OnInit {
         this.editedRowIndex = undefined;
         this.editedProduct = undefined;
     }
+
+    fileChange(element: any) {
+        this.uploadedFiles = element.target.files;
+        console.log(this.uploadedFiles);
+
+    }
+
+    uploadSelected() {
+        let formData = new FormData();
+        for (var i = 0; i < this.uploadedFiles.length; i++) {
+            formData.append("uploads[]", this.uploadedFiles[i], this.uploadedFiles[i].name);
+        }
+        this.http.post('http://localhost:6000/api/upload', formData)
+            .subscribe((response) => {
+                console.log('response received is ', response);
+            })
+    }
+
 }

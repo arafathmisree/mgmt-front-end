@@ -1,14 +1,19 @@
 import { Component, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
+import { observable, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { Apollo, gql } from "apollo-angular";
 import { HttpClient } from "@angular/common/http";
+import { Student } from '../models/Student'
+
 
 
 @Injectable()
 export class DataService implements OnInit {
-  public students: Observable<any> | undefined;
+  // updateStudent(myForm: import("@angular/forms").FormGroup | undefined) {
+  //     throw new Error('Method not implemented.');
+  // }
+  public students = new Observable();
 
   constructor(private apollo: Apollo, private http: HttpClient,) { }
 
@@ -17,7 +22,7 @@ export class DataService implements OnInit {
   }
 
   getAllStudents() {
-    this.apollo
+    return this.apollo
       .watchQuery({
         query: gql`
           {
@@ -31,92 +36,65 @@ export class DataService implements OnInit {
           }
         `,
       })
-
-      .valueChanges.subscribe((result: any) => {
-        this.students = result.data.getAllStudents;
-        console.log(result);
-        console.log('result', this.students);
-      });
   }
 
-  createStudent(payLoad: any) {
 
-    this.apollo
-      .watchQuery({
-        query: gql`
-      {
-        mutation{
-  createStudent(studentInput:{
-    name: payLoad.name,
-    dob: payLoad.dob,
-    email:payLoad.email,
-    age: payLoad.age
-  }){
-    id,
-    name,
-    dob,
-    email,
-    age
+
+
+
+  deleteStudent(payLoad: Student) {
+
+    let _data
+    console.log('');
+
+    let studentId = payLoad.id
+
+
+    const DELETE_STUDENT = gql`
+  mutation removeStudent($id: String!) {
+    removeStudent(id: $id) {
+      id
+    }
   }
-}
-    `,
-      })
+`;
 
-      .valueChanges.subscribe((result: any) => {
-        console.log(result);
-      });
-  }
-
-  deleteStudent(studentId: any) {
-
-    this.apollo
-      .watchQuery({
-        query: gql`
-      {
-        mutation{
-      removeStudent(id:studentId){
-      id,
-      name,
-      dob,
-      email,
-      age
-  }
-}
+    this.apollo.mutate({
+      mutation: DELETE_STUDENT,
+      variables: {
+        id: studentId
       }
-    `,
-      })
-
-      .valueChanges.subscribe((result: any) => {
-        console.log(result);
-      });
-
+    }).subscribe(({ data }) => {
+      this.getAllStudents()
+      console.log('got data', data);
+    }, (error) => {
+      console.log('there was an error sending the query', error);
+    });
   }
 
-  updateStudent(payLoad: any) {
-    this.apollo
-      .watchQuery({
-        query: gql`
-     mutation{
-  updateStudent(studentInput:{
-    id: payLoad.studentId,
-    name: payLoad.name
-    dob: payLoad.dob
-    email:payLoad.email
-    age: payLoad.age
-  }){
-    id,
-    name,
-    dob,
-    email,
-    age
-  }
-}
-    `,
-      })
+  updateStudent(payLoad: Student) {
 
-      .valueChanges.subscribe((result: any) => {
-        console.log(result);
-      });
+    let studentData = payLoad
+    console.log('ll');
+
+
+    const UPDATE_STUDENT = gql`
+  mutation updateStudent($student: UpdateStudentInput!) {
+    updateStudent(studentInput: $student) {
+      id
+    }
+  }
+`;
+
+    this.apollo.mutate({
+      mutation: UPDATE_STUDENT,
+      variables: {
+        student: studentData
+      }
+    }).subscribe(({ data }) => {
+      console.log('got data', data);
+    }, (error) => {
+      console.log('there was an error sending the query', error);
+    });
 
   }
 
@@ -129,4 +107,5 @@ export class DataService implements OnInit {
         console.log(error);
       });
   }
+
 }

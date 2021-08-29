@@ -17,7 +17,7 @@ export class UploadInterceptor implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        if (req.url === "saveUrl") {
+        if (req.url === "http://localhost:6000/api/upload") {
             const events: Observable<HttpEvent<any>>[] = [0, 30, 60, 100].map((x) =>
                 of(<HttpProgressEvent>{
                     type: HttpEventType.UploadProgress,
