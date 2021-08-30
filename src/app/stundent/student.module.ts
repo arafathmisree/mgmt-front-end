@@ -9,6 +9,7 @@ import { UploadsModule } from "@progress/kendo-angular-upload";
 import { DateInputsModule } from "@progress/kendo-angular-dateinputs";
 import { DataService } from "../core/services/data.service";
 import { ReactiveFormsModule } from '@angular/forms';
+import { SocketService } from '../core/services/socket.service';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [
     DataService,
+    SocketService,
     {
       deps: [HttpClient],
       provide: EditService,
