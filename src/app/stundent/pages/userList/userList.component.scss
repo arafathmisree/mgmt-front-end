@@ -2,3 +2,8 @@
   padding: 10px 5px;
   color: #313536;
 }
+
+.example-wrapper {
+  min-height: 0px !important;
+  align-content: flex-start;
+}

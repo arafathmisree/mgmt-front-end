@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Student } from "../../core/models/Student";
-import * as moment from "moment";
+import * as moment from "moment"; 0
 
-// import { Apollo, gql } from 'apollo-angular';
+import { Apollo, gql } from 'apollo-angular';
 
 import { tap, map } from "rxjs/operators";
 import { DataService } from "./data.service";
@@ -17,7 +17,7 @@ const REMOVE_ACTION = "destroy";
 export class EditService extends BehaviorSubject<any[]> {
     query: any;
     students: any;
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private dataService: DataService) {
         super([]);
     }
     private dataURL = "./data";
@@ -107,4 +107,5 @@ export class EditService extends BehaviorSubject<any[]> {
             }
         );
     }
+
 }

@@ -1,7 +1,11 @@
-<form novalidate #fileForm="ngForm">
+<!-- <form novalidate #fileForm="ngForm">
     <input type="file" name="files" (change)="fileChange($event)" id="files" />
     <button kendoButton (click)="uploadSelected()">Upload</button>
-</form>
+</form> -->
+
+<kendo-upload [saveUrl]="uploadSaveUrl" [autoUpload]="false" [restrictions]="myRestrictions" [withCredentials]="false"
+    (upload)="uploadEventHandler($event)">
+</kendo-upload>
 
 <form novalidate #myForm="ngForm">
     <kendo-grid [data]="students" [pageSize]=10 [skip]=5 [height]="533" [pageable]="true" [sortable]="true"
@@ -19,14 +23,16 @@
         <kendo-grid-column field="dob" title="Date of Birth">
             <ng-template kendoGridEditTemplate let-dataItem="dataItem">
                 <div class="example-wrapper" style="min-height: 400px">
-                    <kendo-datepicker [(value)]="dataItem.dob"></kendo-datepicker>
+                    <kendo-datepicker [format]="format" formatPlaceholder="narrow" [(value)]="dataItem.dob"
+                        (valueChange)="onChange($event, dataItem)">
+                    </kendo-datepicker>
                 </div>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="age" title="Age">
             <ng-template kendoGridEditTemplate let-dataItem="dataItem">
-                <input type="number" [(ngModel)]="dataItem.age" kendoGridFocusable name="age" class="k-textbox"
-                    required />
+                <input readonly="true" type="number" [(ngModel)]="dataItem.age" kendoGridFocusable name="age"
+                    class="k-textbox" required />
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="email" title="Email">

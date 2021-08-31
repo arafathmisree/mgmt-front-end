@@ -1,13 +1,14 @@
 import * as SC from "socketcluster-client";
 import { Injectable } from "@angular/core";
 import { NotificationService } from "@progress/kendo-angular-notification";
+import { userListComponent } from "src/app/stundent";
 
 @Injectable()
 export class SocketService {
     private socket: any;
     public data: any;
 
-    constructor(private notificationSrvice: NotificationService) {
+    constructor(private notificationSrvice: NotificationService, private userList: userListComponent) {
         // Connect Socket with server URL
         this.openSocket();
     }
@@ -29,10 +30,12 @@ export class SocketService {
                 for await (let data of fileUploadChannel) {
                     const obj = JSON.stringify(data);
                     console.log(obj);
-                    if (obj.includes("create")) {
-                        this.showNotification("File Uploaded Successfuly", "success", true);
-                    } else {
+                    if (obj.includes("error")) {
                         this.showNotification("File Upload Faild", "error", false);
+                    } else {
+                        this.showNotification("File Uploaded Successfuly", "success", true);
+                        setTimeout(() => { this.userList.refresh() }, 2000);
+
                     }
 
                     // ...

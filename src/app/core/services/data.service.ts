@@ -8,9 +8,7 @@ import { Student } from "../models/Student";
 
 @Injectable()
 export class DataService implements OnInit {
-  // updateStudent(myForm: import("@angular/forms").FormGroup | undefined) {
-  //     throw new Error('Method not implemented.');
-  // }
+
   public students = new Observable();
 
   constructor(private apollo: Apollo, private http: HttpClient) { }
@@ -57,6 +55,7 @@ export class DataService implements OnInit {
       })
       .subscribe(
         ({ data }) => {
+          return data
           this.getAllStudents();
           console.log("got data", data);
         },
@@ -88,6 +87,7 @@ export class DataService implements OnInit {
       .subscribe(
         ({ data }) => {
           console.log("got data", data);
+          return data
         },
         (error) => {
           console.log("there was an error sending the query", error);
