@@ -16,6 +16,9 @@ import { UploadEvent } from "@progress/kendo-angular-upload";
 import * as moment from "moment";
 import { base64StringToBlob } from 'blob-util';
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
+import { EventEmitter } from "@angular/core";
+import { SocketService } from "src/app/core/services/socket.service";
+
 
 
 
@@ -59,11 +62,20 @@ export class userListComponent implements OnInit {
         @Inject(EditService) editServiceFactory: any,
         private dataService: DataService,
         public http: HttpClient,
-        private notificationSrvice: NotificationService
+        private notificationSrvice: NotificationService,
+        private socketService: SocketService
     ) {
     }
 
     public ngOnInit() {
+        this.socketService.success.subscribe(msg => {
+            console.log(msg);
+
+            if (msg == "-successful-") {
+                this.query()
+            }
+        });
+
         this.query = () => {
             this.students = []
             return this.dataService
@@ -194,6 +206,7 @@ export class userListComponent implements OnInit {
     }
 
     public refresh() {
-        location.reload();
+        this.query();
+        // location.reload();
     }
 }
