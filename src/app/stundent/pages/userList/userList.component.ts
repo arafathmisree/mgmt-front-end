@@ -10,13 +10,10 @@ import { map } from "rxjs/operators";
 import { EditService } from "../../../core/services/edit.service";
 import { FileRestrictions } from "@progress/kendo-angular-upload";
 import { DataService } from "../../../core/services/data.service";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { NotificationService } from "@progress/kendo-angular-notification";
+// import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { UploadEvent } from "@progress/kendo-angular-upload";
 import * as moment from "moment";
-import { base64StringToBlob } from 'blob-util';
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
-import { EventEmitter } from "@angular/core";
 import { SocketService } from "src/app/core/services/socket.service";
 
 
@@ -59,10 +56,9 @@ export class userListComponent implements OnInit {
     };
 
     constructor(
-        @Inject(EditService) editServiceFactory: any,
+        // @Inject(EditService) editServiceFactory: any,
         private dataService: DataService,
-        public http: HttpClient,
-        private notificationSrvice: NotificationService,
+        // public http: HttpClient,
         private socketService: SocketService
     ) {
     }
@@ -77,31 +73,31 @@ export class userListComponent implements OnInit {
         });
 
         this.query = () => {
-            this.students = []
-            return this.dataService
-                .getAllStudents()
-                .valueChanges.subscribe((result: any) => {
-                    result.data.getAllStudents.map((_student: any) => {
-                        let date = moment(_student.dob).utc().format("MM/DD/YYYY");
-                        // let date: Date = new Date(2019, 5, 1);
+            // this.students = []
+            // return this.dataService
+            //     .getAllStudents()
+            //     .valueChanges.subscribe((result: any) => {
+            //         result.data.getAllStudents.map((_student: any) => {
+            //             let date = moment(_student.dob).utc().format("MM/DD/YYYY");
+            //             // let date: Date = new Date(2019, 5, 1);
 
-                        var __date = date.split('/');
-                        let _date = new Date(parseInt(__date[2]), parseInt(__date[1]), parseInt(__date[0]), 22)
+            //             var __date = date.split('/');
+            //             let _date = new Date(parseInt(__date[2]), parseInt(__date[1]), parseInt(__date[0]), 22)
 
 
-                        let __std: Student = {
-                            id: _student.id,
-                            name: _student.name,
-                            dob: _date,
-                            age: _student.age,
-                            email: _student.email,
-                        };
-                        this.students.push(__std);
-                    });
-                    // this.studentData = this.students.map((data: any) => process(data, this.gridState));
+            //             let __std: Student = {
+            //                 id: _student.id,
+            //                 name: _student.name,
+            //                 dob: _date,
+            //                 age: _student.age,
+            //                 email: _student.email,
+            //             };
+            //             this.students.push(__std);
+            //         });
+            //         // this.studentData = this.students.map((data: any) => process(data, this.gridState));
 
-                    console.log(this.studentData, this.students);
-                });
+            //         console.log(this.studentData, this.students);
+            //     });
         }
         this.query()
 

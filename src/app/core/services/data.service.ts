@@ -9,29 +9,29 @@ import { Student } from "../models/Student";
 @Injectable()
 export class DataService implements OnInit {
 
-  public students = new Observable();
+  public students = new Observable<[]>();
 
-  constructor(private apollo: Apollo, private http: HttpClient) { }
+  constructor(private apolloService: Apollo, private http: HttpClient) { }
 
   ngOnInit() {
     console.log("data");
   }
 
-  getAllStudents() {
-    return this.apollo.watchQuery({
-      query: gql`
-        {
-          getAllStudents {
-            id
-            name
-            dob
-            email
-            age
-          }
-        }
-      `,
-    });
-  }
+  // getAllStudents() {
+  //   return this.apolloService.watchQuery({
+  //     query: gql`
+  //       {
+  //         getAllStudents {
+  //           id
+  //           name
+  //           dob
+  //           email
+  //           age
+  //         }
+  //       }
+  //     `,
+  //   })
+  // }
   deleteStudent(payLoad: Student) {
     let _data;
     console.log("");
@@ -46,7 +46,7 @@ export class DataService implements OnInit {
       }
     `;
 
-    this.apollo
+    this.apolloService
       .mutate({
         mutation: DELETE_STUDENT,
         variables: {
@@ -56,7 +56,7 @@ export class DataService implements OnInit {
       .subscribe(
         ({ data }) => {
           return data
-          this.getAllStudents();
+          // this.getAllStudents();
           console.log("got data", data);
         },
         (error) => {
@@ -77,7 +77,7 @@ export class DataService implements OnInit {
       }
     `;
 
-    this.apollo
+    this.apolloService
       .mutate({
         mutation: UPDATE_STUDENT,
         variables: {

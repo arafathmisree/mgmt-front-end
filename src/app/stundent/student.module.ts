@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     GridModule,
     HttpClientModule,
-    HttpClientJsonpModule,
+    // HttpClientJsonpModule,
     UploadsModule,
     DateInputsModule,
     ReactiveFormsModule
@@ -32,11 +32,12 @@ import { CommonModule } from '@angular/common';
   providers: [
     DataService,
     SocketService,
-    {
-      deps: [HttpClient, DataService],
-      provide: EditService,
-      useFactory: (jsonp: HttpClient, service: DataService) => () => new EditService(jsonp, service)
-    },
+    // HttpClient
+    // {
+    //   deps: [HttpClient, DataService],
+    //   provide: EditService,
+    //   useFactory: (jsonp: HttpClient, service: DataService) => () => new EditService(jsonp, service)
+    // },
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: UploadInterceptor,
