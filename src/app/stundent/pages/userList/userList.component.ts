@@ -170,7 +170,7 @@ export class userListComponent implements OnInit {
         let data = { ...dataItem, age: Number(dataItem.age) };
         this.dataService.updateStudent(data);
 
-        sender.closeRow(rowIndex);
+        // sender.closeRow(rowIndex);
 
         this.editedRowIndex = undefined;
         this.editedProduct = undefined;
@@ -187,7 +187,7 @@ export class userListComponent implements OnInit {
 
     }
 
-    private closeEditor(grid: any, rowIndex = this.editedRowIndex) {
+    public closeEditor(grid: any, rowIndex = this.editedRowIndex) {
         grid.closeRow(rowIndex);
     }
     calculateAge(birthday: any) { // birthday is a date

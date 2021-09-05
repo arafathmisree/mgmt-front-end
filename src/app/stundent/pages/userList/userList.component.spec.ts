@@ -224,4 +224,36 @@ describe('userListComponent', () => {
     backend.expectOne(UPDATE_STUDENT).flush(TEST_UPDATE);
   });
 
+  it("should call save handler", () => {
+    let dataItem = {
+      id: "1b90d1b0-f3d2-4b4a-bf39-523883929175",
+      name: "Nimal T",
+      dob: birthday,
+      email: "abc@432",
+      age: 29
+    }
+
+    component.saveHandler({ dataItem });
+
+
+    expect(component.saveHandler).toHaveBeenCalled
+
+  });
+  it("should call remove handler", () => {
+    let dataItem = {
+      id: "1b90d1b0-f3d2-4b4a-bf39-523883929175",
+      name: "Nimal T",
+      dob: birthday,
+      email: "abc@432",
+      age: 29
+    }
+
+    component.saveHandler({ dataItem });
+
+
+    expect(component.removeHandler).toHaveBeenCalled
+    expect(component.getAllStudents).toHaveBeenCalled
+
+  });
+
 });
