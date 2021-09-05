@@ -52,7 +52,9 @@ export class userListComponent implements OnInit {
     };
 
     constructor(
+        // @Inject(EditService) editServiceFactory: any,
         private dataService: DataService,
+        // public http: HttpClient,
         private socketService: SocketService,
     ) {
     }
@@ -66,34 +68,6 @@ export class userListComponent implements OnInit {
                 this.query()
             }
         });
-        this.query = () => {
-            // this.students = []
-            // return this.dataService
-            //     .getAllStudents()
-            //     .valueChanges.subscribe((result: any) => {
-            //         result.data.getAllStudents.map((_student: any) => {
-            //             let date = moment(_student.dob).utc().format("MM/DD/YYYY");
-            //             // let date: Date = new Date(2019, 5, 1);
-
-            //             var __date = date.split('/');
-            //             let _date = new Date(parseInt(__date[2]), parseInt(__date[1]), parseInt(__date[0]), 22)
-
-
-            //             let __std: Student = {
-            //                 id: _student.id,
-            //                 name: _student.name,
-            //                 dob: _date,
-            //                 age: _student.age,
-            //                 email: _student.email,
-            //             };
-            //             this.students.push(__std);
-            //         });
-            //         // this.studentData = this.students.map((data: any) => process(data, this.gridState));
-
-            //         console.log(this.studentData, this.students);
-            //     });
-        }
-        this.query()
 
         console.log(this.students);
         console.log(this.studentData);
@@ -105,7 +79,6 @@ export class userListComponent implements OnInit {
         this.dataService.getAllStudents().subscribe((result: any) => {
             result.data.getAllStudents.map((_student: any) => {
                 let date = moment(_student.dob).utc().format("MM/DD/YYYY");
-                // let date: Date = new Date(2019, 5, 1);
 
                 var __date = date.split('/');
                 let _date = new Date(parseInt(__date[2]), parseInt(__date[1]), parseInt(__date[0]), 22)
@@ -142,6 +115,19 @@ export class userListComponent implements OnInit {
         console.log(_data);
 
     }
+    public addHandler({ sender }: any, formInstance: any) {
+        formInstance.reset();
+        this.closeEditor(sender);
+        this.myForm = new FormGroup({
+            name: new FormControl(),
+            dob: new FormControl(),
+            age: new FormControl(),
+            email: new FormControl(),
+        });
+        sender.addRow(this.myForm);
+
+        // sender.addRow(new Product());
+    }
 
     public editHandler({ sender, rowIndex, dataItem }: any) {
         console.log(this.calculateAge(dataItem.dob));
@@ -168,9 +154,12 @@ export class userListComponent implements OnInit {
 
     public saveHandler({ sender, rowIndex, dataItem, isNew }: any) {
         let data = { ...dataItem, age: Number(dataItem.age) };
-        this.dataService.updateStudent(data);
+        this.dataService.updateStudent(data).subscribe(data => {
+            console.log(data);
 
-        // sender.closeRow(rowIndex);
+        })
+
+        sender.closeRow(rowIndex);
 
         this.editedRowIndex = undefined;
         this.editedProduct = undefined;
@@ -180,14 +169,17 @@ export class userListComponent implements OnInit {
 
     public async removeHandler({ dataItem }: any) {
         let _result;
-        _result = await this.dataService.deleteStudent(dataItem);
+        this.dataService.deleteStudent(dataItem).subscribe(data => {
+            console.log(data);
+
+        })
         console.log(_result);
 
         setTimeout(() => { this.getAllStudents() }, 2000);
 
     }
 
-    public closeEditor(grid: any, rowIndex = this.editedRowIndex) {
+    private closeEditor(grid: any, rowIndex = this.editedRowIndex) {
         grid.closeRow(rowIndex);
     }
     calculateAge(birthday: any) { // birthday is a date

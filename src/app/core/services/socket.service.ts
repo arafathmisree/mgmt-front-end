@@ -38,11 +38,7 @@ export class SocketService {
                         this.showNotification("File Uploaded Successfuly", "success", true);
                         this.success.emit('-successful-');
 
-                        // setTimeout(() => { this.userList.refresh() }, 2000);
-
                     }
-
-                    // ...
                 }
             })();
         })();

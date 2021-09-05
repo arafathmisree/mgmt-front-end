@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { userListComponent } from '..';
 // import { SocketService } from 'src/app/core/services/socket.service';
 // import { EditService } from 'src/app/core/services/edit.service';
-import { DataService, DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from 'src/app/core/services/data.service';
+import { DataService } from 'src/app/core/services/data.service';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { UploadsModule } from "@progress/kendo-angular-upload";
 import { HttpClientModule } from '@angular/common/http';
@@ -15,11 +15,12 @@ import { Apollo, gql } from "apollo-angular";
 import { NotificationService } from "@progress/kendo-angular-notification";
 import { SocketService } from 'src/app/core/services/socket.service';
 import { Student } from 'src/app/core/models/Student';
-import { By } from '@angular/platform-browser';
 import {
   ApolloTestingModule,
   ApolloTestingController,
 } from 'apollo-angular/testing';
+import { DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from "../../../core/queries/queries";
+
 
 let birthday = new Date('07/07/1991')
 
@@ -107,8 +108,6 @@ describe('userListComponent', () => {
   let notificationSrvice: jasmine.SpyObj<NotificationService>;
   let backend: ApolloTestingController;
 
-
-  // let apolloService: jasmine.SpyObj<Apollo>
   let apolloService: Apollo
 
   class mockDataService {
@@ -127,10 +126,6 @@ describe('userListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     const notificationSpy = jasmine.createSpyObj('notificationSrvice', ['getValue']);
-
-    const apolloSpy = jasmine.createSpyObj('apolloService', ['getValue']);
-    // const dataSpy = jasmine.createSpyObj('dataService', ['getValue']);
-
 
     TestBed.configureTestingModule({
       declarations: [userListComponent],
@@ -161,13 +156,9 @@ describe('userListComponent', () => {
     de = fixture.debugElement;
     socketService = TestBed.inject(SocketService);
     notificationSrvice = TestBed.inject(NotificationService) as jasmine.SpyObj<NotificationService>;
-    // dataServiceMock = TestBed.inject(mockDataService);
     dataService = TestBed.inject(DataService);
     apolloService = TestBed.inject(Apollo);
-    // apolloService = TestBed.inject(Apollo) as jasmine.SpyObj<Apollo>;
 
-
-    // component.ngOnInit();
     backend = TestBed.inject(ApolloTestingController);
 
 
