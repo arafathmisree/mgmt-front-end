@@ -7,16 +7,12 @@ import { State, process } from "@progress/kendo-data-query";
 
 import { Student } from "../../../core/models/Student";
 import { map } from "rxjs/operators";
-import { EditService } from "../../../core/services/edit.service";
 import { FileRestrictions } from "@progress/kendo-angular-upload";
 import { DataService } from "../../../core/services/data.service";
-// import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { UploadEvent } from "@progress/kendo-angular-upload";
 import * as moment from "moment";
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
 import { SocketService } from "src/app/core/services/socket.service";
-
-
 
 
 @Component({
@@ -48,7 +44,7 @@ export class userListComponent implements OnInit {
         allowedExtensions: [".xls", ".xlsx"],
     };
     uploadedFiles: any;
-    studentData: any;
+    studentData!: Observable<GridDataResult>;
 
     public format: FormatSettings = {
         displayFormat: "dd/MM/yyyy",
@@ -56,14 +52,13 @@ export class userListComponent implements OnInit {
     };
 
     constructor(
-        // @Inject(EditService) editServiceFactory: any,
         private dataService: DataService,
-        // public http: HttpClient,
-        private socketService: SocketService
+        private socketService: SocketService,
     ) {
     }
 
     public ngOnInit() {
+        this.getAllStudents()
         this.socketService.success.subscribe(msg => {
             console.log(msg);
 
@@ -71,7 +66,6 @@ export class userListComponent implements OnInit {
                 this.query()
             }
         });
-
         this.query = () => {
             // this.students = []
             // return this.dataService
@@ -105,6 +99,34 @@ export class userListComponent implements OnInit {
         console.log(this.studentData);
 
     }
+
+    public getAllStudents() {
+        this.students = []
+        this.dataService.getAllStudents().subscribe((result: any) => {
+            result.data.getAllStudents.map((_student: any) => {
+                let date = moment(_student.dob).utc().format("MM/DD/YYYY");
+                // let date: Date = new Date(2019, 5, 1);
+
+                var __date = date.split('/');
+                let _date = new Date(parseInt(__date[2]), parseInt(__date[1]), parseInt(__date[0]), 22)
+
+
+                let __std: Student = {
+                    id: _student.id,
+                    name: _student.name,
+                    dob: _date,
+                    age: _student.age,
+                    email: _student.email,
+                };
+                this.students.push(__std);
+            });
+            // this.studentData = this.students.map((data: any) => process(data, this.gridState));
+
+            console.log(this.studentData, this.students);
+
+
+        });
+    }
     public onStateChange(state: State) {
     }
 
@@ -119,19 +141,6 @@ export class userListComponent implements OnInit {
 
         console.log(_data);
 
-    }
-    public addHandler({ sender }: any, formInstance: any) {
-        formInstance.reset();
-        this.closeEditor(sender);
-        this.myForm = new FormGroup({
-            name: new FormControl(),
-            dob: new FormControl(),
-            age: new FormControl(),
-            email: new FormControl(),
-        });
-        sender.addRow(this.myForm);
-
-        // sender.addRow(new Product());
     }
 
     public editHandler({ sender, rowIndex, dataItem }: any) {
@@ -165,7 +174,7 @@ export class userListComponent implements OnInit {
 
         this.editedRowIndex = undefined;
         this.editedProduct = undefined;
-        setTimeout(() => { this.query() }, 2000);
+        setTimeout(() => { this.getAllStudents() }, 2000);
 
     }
 
@@ -174,7 +183,7 @@ export class userListComponent implements OnInit {
         _result = await this.dataService.deleteStudent(dataItem);
         console.log(_result);
 
-        setTimeout(() => { this.query() }, 2000);
+        setTimeout(() => { this.getAllStudents() }, 2000);
 
     }
 
@@ -188,11 +197,6 @@ export class userListComponent implements OnInit {
     }
 
     public onChange(value: Date, dataItem: any): void {
-
-        console.log(this.calculateAge(value));
-
-        console.log(dataItem);
-
         this.students.map(data => {
             if (data.id == dataItem.id) {
                 data.age = this.calculateAge(value)
@@ -202,7 +206,7 @@ export class userListComponent implements OnInit {
     }
 
     public refresh() {
-        this.query();
-        // location.reload();
+        this.getAllStudents();
     }
+
 }
