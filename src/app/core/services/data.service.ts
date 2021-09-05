@@ -4,7 +4,7 @@ import { Apollo } from "apollo-angular";
 import { HttpClient } from "@angular/common/http";
 import { Student } from "../models/Student";
 import { shareReplay } from 'rxjs/operators';
-import { DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from "../queries/queries";
+import { DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from "../const/queries";
 
 
 

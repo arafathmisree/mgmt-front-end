@@ -3,8 +3,6 @@ import { Component, DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, async } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { userListComponent } from '..';
-// import { SocketService } from 'src/app/core/services/socket.service';
-// import { EditService } from 'src/app/core/services/edit.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { UploadsModule } from "@progress/kendo-angular-upload";
@@ -19,7 +17,7 @@ import {
   ApolloTestingModule,
   ApolloTestingController,
 } from 'apollo-angular/testing';
-import { DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from "../../../core/queries/queries";
+import { DELETE_STUDENT, GET_ALL_STUDENTS, UPDATE_STUDENT } from "../../../core/const/queries";
 
 
 let birthday = new Date('07/07/1991')
@@ -110,19 +108,6 @@ describe('userListComponent', () => {
 
   let apolloService: Apollo
 
-  class mockDataService {
-
-    getAllStudents() {
-      let students: any = 'udara'
-      return students
-    }
-
-    deleteStudent(payLoad: Student) {
-      return payLoad.id
-    }
-
-  }
-
 
   beforeEach(waitForAsync(() => {
     const notificationSpy = jasmine.createSpyObj('notificationSrvice', ['getValue']);
@@ -139,7 +124,6 @@ describe('userListComponent', () => {
       ],
 
       providers: [
-        mockDataService,
         Apollo,
         DataService,
         // { provide: Apollo, useValue: apolloSpy },

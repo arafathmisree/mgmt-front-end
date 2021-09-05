@@ -13,6 +13,7 @@ import { UploadEvent } from "@progress/kendo-angular-upload";
 import * as moment from "moment";
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
 import { SocketService } from "src/app/core/services/socket.service";
+import { uploadSaveUrl } from "src/app/core/const/urls";
 
 
 @Component({
@@ -23,7 +24,7 @@ import { SocketService } from "src/app/core/services/socket.service";
 export class userListComponent implements OnInit {
     private query: any;
 
-    public uploadSaveUrl = 'http://localhost:7000/api/upload';
+    public uploadSaveUrl = uploadSaveUrl
 
     public myForm: FormGroup | undefined;
     fileInputLabel: string | undefined;
