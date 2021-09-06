@@ -13,7 +13,7 @@ import { UploadEvent } from "@progress/kendo-angular-upload";
 import * as moment from "moment";
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
 import { SocketService } from "src/app/core/services/socket.service";
-import { uploadSaveUrl } from "src/app/core/const/urls";
+import { environment } from "src/environments/environment.dev";
 
 
 @Component({
@@ -28,7 +28,7 @@ export class userListComponent implements OnInit {
     public dialogResult = false;
 
 
-    public uploadSaveUrl = uploadSaveUrl
+    public uploadSaveUrl = environment.uploadSaveUrl
 
     public myForm: FormGroup | undefined;
     fileInputLabel: string | undefined;
